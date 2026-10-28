@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#087e8b">
+  <title>WaterWise — Water Usage Log</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="WaterWise home"><span class="brand-mark">≈</span> WaterWise</a>
+    <nav id="nav" class="nav">
+      <button class="nav-link active" data-view="dashboard">Dashboard</button>
+      <button class="nav-link" data-view="history">My history</button>
+      <button class="nav-link" data-view="tips">Saving tips</button>
+      <button class="nav-link hidden" id="adminNav" data-view="admin">Admin</button>
+    </nav>
+    <div class="account" id="accountArea"><button class="btn btn-primary" id="showAuth">Sign in</button></div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">SMALL HABITS · BIG IMPACT</p>
+        <h1>Every drop tells<br><span>a story.</span></h1>
+        <p class="hero-copy">Track your daily water use, spot patterns, and make every litre count.</p>
+        <button class="btn btn-light" id="heroAdd">＋ Log water use</button>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="sun"></div><div class="water-drop">⌄</div>
+        <div class="wave wave-one"></div><div class="wave wave-two"></div>
+        <div class="hero-note"><strong>Be water wise.</strong><span>One day at a time.</span></div>
+      </div>
+    </section>
+
+    <section id="authPanel" class="panel auth-panel hidden" aria-labelledby="authTitle">
+      <div class="panel-heading"><div><p class="eyebrow">WELCOME</p><h2 id="authTitle">Sign in to WaterWise</h2></div><button class="icon-btn" id="closeAuth" aria-label="Close sign in">×</button></div>
+      <div class="auth-tabs"><button class="tab active" data-auth="signin">Sign in</button><button class="tab" data-auth="signup">Create account</button></div>
+      <form id="authForm" class="form-grid">
+        <label>Email address<input type="email" id="authEmail" autocomplete="email" required placeholder="you@example.com"></label>
+        <label>Password<input type="password" id="authPassword" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters"></label>
+        <p class="muted small full" id="authHint">Use your account to save and review your water logs.</p>
+        <button class="btn btn-primary full" type="submit" id="authSubmit">Sign in</button>
+      </form>
+      <p id="authMessage" class="message" role="status"></p>
+    </section>
+
+    <section id="dashboardView" class="view">
+      <div class="section-heading"><div><p class="eyebrow">YOUR OVERVIEW</p><h2>Water at a glance</h2></div><span id="todayLabel" class="date-pill"></span></div>
+      <div class="stats-grid">
+        <article class="stat-card stat-primary"><span class="stat-icon">◉</span><p>Today's usage</p><strong id="todayTotal">—</strong><small>litres logged today</small></article>
+        <article class="stat-card"><span class="stat-icon">▦</span><p>This week</p><strong id="weekTotal">—</strong><small>litres in the last 7 days</small></article>
+        <article class="stat-card"><span class="stat-icon">↗</span><p>Log entries</p><strong id="entryCount">—</strong><small>records in your history</small></article>
+      </div>
+
+      <div class="content-grid">
+        <section class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">MAKE A RECORD</p><h2>Log water usage</h2></div><span class="panel-icon">＋</span></div>
+          <p class="muted">Record an activity to understand where your water goes.</p>
+          <form id="logForm" class="form-grid">
+            <label>Activity category<select id="category" required><option value="">Choose category</option><option>Drinking</option><option>Cooking</option><option>Bathing</option><option>Laundry</option><option>Cleaning</option><option>Gardening</option><option>Dishwashing</option><option>Other</option></select></label>
+            <label>Amount used (litres)<input id="litres" type="number" min="0.1" max="100000" step="0.1" required placeholder="e.g. 12"></label>
+            <label>Date<input id="logDate" type="date" required></label>
+            <label>Notes <span class="muted">(optional)</span><input id="notes" maxlength="240" placeholder="e.g. 5-minute shower"></label>
+            <button class="btn btn-primary full" type="submit">Save water log</button>
+          </form>
+          <p id="logMessage" class="message" role="status"></p>
+        </section>
+        <section class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">RECENT ACTIVITY</p><h2>Latest logs</h2></div><button class="text-button" data-view="history">View all →</button></div>
+          <div id="recentLogs" class="log-list"><div class="empty-state">Sign in to see your saved water logs.</div></div>
+        </section>
+      </div>
+      <section class="tip-banner"><div class="tip-icon">✦</div><div><p class="eyebrow">TODAY'S REMINDER</p><h3>Turn off the tap while brushing.</h3><p>Small changes in daily routines can help save water over time.</p></div><button class="btn btn-outline" data-view="tips">More tips</button></section>
+    </section>
+
+    <section id="historyView" class="view hidden">
+      <div class="section-heading"><div><p class="eyebrow">YOUR RECORDS</p><h2>Water usage history</h2><p class="muted">Review, search, and manage your entries.</p></div></div>
+      <section class="panel">
+        <div class="filters"><label class="search-label">Search notes<input id="historySearch" type="search" placeholder="Find a note..."></label><label>Category<select id="historyCategory"><option value="">All categories</option><option>Drinking</option><option>Cooking</option><option>Bathing</option><option>Laundry</option><option>Cleaning</option><option>Gardening</option><option>Dishwashing</option><option>Other</option></select></label></div>
+        <div id="historyLogs" class="table-wrap"><p class="empty-state">Sign in to see your history.</p></div>
+      </section>
+    </section>
+
+    <section id="tipsView" class="view hidden">
+      <div class="section-heading"><div><p class="eyebrow">BETTER HABITS</p><h2>Simple ways to save water</h2><p class="muted">Choose a small change you can keep doing.</p></div></div>
+      <div class="tips-grid">
+        <article class="tip-card"><span>🚿</span><h3>Shorten showers</h3><p>Try a shorter shower and turn off the water while soaping up.</p></article>
+        <article class="tip-card"><span>🪥</span><h3>Close the tap</h3><p>Turn off the tap while brushing teeth or scrubbing dishes.</p></article>
+        <article class="tip-card"><span>🧺</span><h3>Full loads only</h3><p>Run the washing machine when you have a full load, when practical.</p></article>
+        <article class="tip-card"><span>🌱</span><h3>Water plants wisely</h3><p>Water plants in cooler parts of the day to reduce evaporation.</p></article>
+        <article class="tip-card"><span>🔧</span><h3>Fix leaks</h3><p>Check taps and pipes for drips and arrange repairs promptly.</p></article>
+        <article class="tip-card"><span>🍽️</span><h3>Use a basin</h3><p>Wash vegetables in a bowl instead of leaving the tap running.</p></article>
+      </div>
+      <section class="panel suggestion-panel"><div><p class="eyebrow">SHARE AN IDEA</p><h2>Suggest a water-saving tip</h2><p class="muted">Share a practical idea with the WaterWise community.</p></div>
+        <form id="suggestionForm" class="form-grid"><label class="full">Your suggestion<textarea id="suggestionText" rows="3" maxlength="500" required placeholder="What water-saving habit would you recommend?"></textarea></label><button class="btn btn-primary" type="submit">Submit suggestion</button></form><p id="suggestionMessage" class="message" role="status"></p>
+      </section>
+    </section>
+
+    <section id="adminView" class="view hidden">
+      <div class="section-heading"><div><p class="eyebrow">ADMINISTRATION</p><h2>Community overview</h2><p class="muted">Review submitted water-saving suggestions.</p></div></div>
+      <section class="panel"><div class="panel-heading"><h2>Suggestions</h2><button class="btn btn-outline btn-small" id="refreshAdmin">Refresh</button></div><div id="adminSuggestions" class="log-list">Loading…</div></section>
+    </section>
+    <div id="globalMessage" class="global-message hidden" role="status"></div>
+  </main>
+  <footer><span class="brand"><span class="brand-mark">≈</span> WaterWise</span><span>Track thoughtfully. Save every drop.</span></footer>
+</body>
+</html>
